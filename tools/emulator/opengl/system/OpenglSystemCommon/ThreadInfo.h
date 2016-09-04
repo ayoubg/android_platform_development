@@ -36,24 +36,9 @@ struct EGLThreadInfo
 
 EGLThreadInfo *slow_getEGLThreadInfo();
 
-#ifdef HAVE_ANDROID_OS
-    // We have a dedicated TLS slot in bionic
-    inline EGLThreadInfo* getEGLThreadInfo() {
-        EGLThreadInfo *tInfo =
-             (EGLThreadInfo *)(((unsigned *)__get_tls())[TLS_SLOT_OPENGL]);
-        if (!tInfo) {
-            tInfo = slow_getEGLThreadInfo();
-            ((uint32_t *)__get_tls())[TLS_SLOT_OPENGL] = (uint32_t)tInfo;
-        }
-        return tInfo;
-    }
-#else
-    inline EGLThreadInfo* getEGLThreadInfo() {
+inline EGLThreadInfo* getEGLThreadInfo() {
         return slow_getEGLThreadInfo();
     }
-#endif
-
-
 
 
 #endif // of _THREAD_INFO_H
